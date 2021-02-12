@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Wetterdaten</title>
+    <link rel="stylesheet" href="jquery-jvectormap-2.0.5.css" type="text/css" media="screen"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="jquery-jvectormap-2.0.5.min.js"></script>
+    <script src="jquery-jvectormap-de-merc.js"></script>
+    <script src="jquery-jvectormap-europe-merc.js"></script>
+    <style>
+
+        .map {
+            width: available;
+            height: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .mapBox {
+            width: 33%;
+            display: flow;
+            margin-right: auto;
+            margin-left: auto
+        }
+
+        .mapScale {
+            display: flex;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .mapScale > div {
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .mapScale > div > div {
+            width: 6.25%;
+            height: 30px;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .playButton {
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            font-size: 150%;
+            height: 40px;
+            width: 40px;
+        }
+
+        .jvectormap-region {
+            stroke: black;
+            stroke-width: 1.5;
+        }
+
+        .slidecontainer {
+            display: flex;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            margin: auto 2% auto auto;
+            float: right;
+            height: 15px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #1E90FF;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #1E90FF;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="flex-container">
+    <a href="GermanMapAnnual.html" style="margin: auto">Jährliche Kenntage deutscher Bundesländer</a>
+    <a href="GermanMapMonthly.html" style="margin: auto">Monatliche Mittelwerte deutscher Bundesländer</a>
+    <a href="EuropeMap.html" style="margin: auto">Monatliche Temperaturen europäischer Hauptstädte</a>
+</div>
+
+<h1 style="text-align:center">Monatliche Mittelwerte deutscher Bundesländer</h1>
+<div style="display: flex; margin: auto">
+    <div style="margin: auto">
+        <input type="checkbox" id="mapCheckbox-0" onclick="showMap(0)"
+               checked="checked">
+        <label for="mapCheckbox-0"> Lufttemperatur</label>
+    </div>
+    <div style="margin: auto">
+        <input type="checkbox" id="mapCheckbox-1" onclick="showMap(1)"
+               checked="checked">
+        <label for="mapCheckbox-1"> Niederschlag</label>
+    </div>
+    <div style="margin: auto">
+        <input type="checkbox" id="mapCheckbox-2" onclick="showMap(2)" checked="checked">
+        <label for="mapCheckbox-2"> Sonnenscheindauer</label>
+    </div>
+    <div style="margin: auto">
+        <input type="checkbox" id="show_all_maps" onclick="showMap(-1)" checked="checked">
+        <label for="show_all_maps"> Alle</label>
+    </div>
+</div>
+<br>
+<div class="flex-container">
+    <div id="mapBox-0" class="mapBox">
+        <div>
+            <div id="map-0" class="map"></div>
+            <p style="text-align: center">Lufttemperatur</p>
+        </div>
+        <div class="mapScale">
+            <div style="margin-top: auto; margin-bottom: auto"><span id="mapScaleMin-0">1</span>°C</div>
+            <div style="width: 64%; display: flex">
+                <div style="background-color: #0000ff"></div>
+                <div style="background-color: #1100ee"></div>
+                <div style="background-color: #2200dd"></div>
+                <div style="background-color: #3300cc"></div>
+                <div style="background-color: #4400bb"></div>
+                <div style="background-color: #5500aa"></div>
+                <div style="background-color: #660099"></div>
+                <div style="background-color: #770088"></div>
+                <div style="background-color: #880077"></div>
+                <div style="background-color: #990066"></div>
+                <div style="background-color: #aa0055"></div>
+                <div style="background-color: #bb0044"></div>
+                <div style="background-color: #cc0033"></div>
+                <div style="background-color: #dd0022"></div>
+                <div style="background-color: #ee0011"></div>
+                <div style="background-color: #ff0000"></div>
+            </div>
+            <div style="margin-top: auto; margin-bottom: auto"><span id="mapScaleMax-0">100</span>°C</div>
+        </div>
+    </div>
+    <div id="mapBox-1" class="mapBox">
+        <div>
+            <div id="map-1" class="map"></div>
+            <p style="text-align: center">Niederschlag</p>
+        </div>
+        <div class="mapScale">
+            <div style="margin-top: auto; margin-bottom: auto"><span id="mapScaleMin-1">1</span>mm</div>
+            <div style="width: 64%; display: flex">
+                <div style="background-color: #0000ff"></div>
+                <div style="background-color: #1100ee"></div>
+                <div style="background-color: #2200dd"></div>
+                <div style="background-color: #3300cc"></div>
+                <div style="background-color: #4400bb"></div>
+                <div style="background-color: #5500aa"></div>
+                <div style="background-color: #660099"></div>
+                <div style="background-color: #770088"></div>
+                <div style="background-color: #880077"></div>
+                <div style="background-color: #990066"></div>
+                <div style="background-color: #aa0055"></div>
+                <div style="background-color: #bb0044"></div>
+                <div style="background-color: #cc0033"></div>
+                <div style="background-color: #dd0022"></div>
+                <div style="background-color: #ee0011"></div>
+                <div style="background-color: #ff0000"></div>
+            </div>
+            <div style="margin-top: auto; margin-bottom: auto"><span id="mapScaleMax-1">100</span>mm</div>
+        </div>
+    </div>
+    <div id="mapBox-2" class="mapBox">
+        <div>
+            <div id="map-2" class="map"></div>
+            <p style="text-align: center">Sonnenscheindauer</p>
+        </div>
+        <div class="mapScale">
+            <div style="margin-top: auto; margin-bottom: auto"><span id="mapScaleMin-2">1</span>h</div>
+            <div style="width: 64%; display: flex">
+                <div style="background-color: #0000ff"></div>
+                <div style="background-color: #1100ee"></div>
+                <div style="background-color: #2200dd"></div>
+                <div style="background-color: #3300cc"></div>
+                <div style="background-color: #4400bb"></div>
+                <div style="background-color: #5500aa"></div>
+                <div style="background-color: #660099"></div>
+                <div style="background-color: #770088"></div>
+                <div style="background-color: #880077"></div>
+                <div style="background-color: #990066"></div>
+                <div style="background-color: #aa0055"></div>
+                <div style="background-color: #bb0044"></div>
+                <div style="background-color: #cc0033"></div>
+                <div style="background-color: #dd0022"></div>
+                <div style="background-color: #ee0011"></div>
+                <div style="background-color: #ff0000"></div>
+            </div>
+            <div style="margin-top: auto; margin-bottom: auto"><span id="mapScaleMax-2">100</span>h</div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="slidecontainer">
+    <p style="margin-left: 2%; font-size:150%">Monat: <span id="month"></span></p>
+    <input style="width: 50%; margin-right: 17%" type="range" min="0" max="11" value="0" class="slider"
+           id="monthsSlider">
+</div>
+
+<div class="slidecontainer">
+    <p style="margin-left: 2%; font-size:150%">Jahr: <span id="year"></span></p>
+    <input style="width: 80%" type="range" min="1881" max="2025" value="2000" class="slider" id="yearsSlider">
+</div>
+<button class="playButton" id="playButton">&#9658;</button>
+<p style="text-align:center">Gruppe: Fabian Böttcher, Laura Haase, Ruben Niederhoff</p>
+
+<script>
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:3000/germanymonthly",
+        success: function (data) {
+            // split the string back into the different csv files
+            var csvData = data.split("|");
+            processData(csvData);
+        }
+    });
+
+    var currentYear = 2000;
+    var currentMonth = 0;
+    var csvFiles = [];
+    var colorScale = [];
+    var valueScales = [];
+
+    function processData(csvData) {
+        var maxLength = 0;
+        for (var i = 0; i < csvData.length; i++) {
+            var length = csvData[i].split(/\r\n|\n/).length;
+            if (length > maxLength) {
+                maxLength = length;
+            }
+        }
+
+        console.log(maxLength);
+        for (var i = 0; i < csvData.length; i++) {
+            var csvFile = [];
+            var allTextLines = csvData[i].split(/\r\n|\n/);
+            var headers = allTextLines[0].split(',');
+            var minValue = Number.MAX_VALUE;
+            var maxValue = Number.MIN_VALUE;
+
+            for (var j = 0; j < maxLength; j++) {
+                csvFile.push([]);
+            }
+            var emptyLines = maxLength - allTextLines.length;
+            for (var j = 0; j < emptyLines; j++) {
+                csvFile[j].push(null);
+            }
+
+            for (var j = 1; j < allTextLines.length; j++) {
+                var data = allTextLines[j].split(',');
+                if (data.length === headers.length) {
+
+                    //var tarr = [];
+                    for (var k = 2; k < headers.length; k++) {
+                        if (k === 15) {
+                            continue;
+                        }
+                        csvFile[emptyLines + j - 1].push(data[k]);
+                        var tempFloat = parseFloat(data[k]);
+                        if (tempFloat < minValue) {
+                            minValue = tempFloat;
+                        }
+                        if (tempFloat > maxValue) {
+                            maxValue = tempFloat;
+                        }
+                    }
+                    //csvFile.push(tarr);
+                }
+            }
+            csvFiles.push(csvFile);
+            calculateValues(minValue, maxValue);
+        }
+        calculateColorScale();
+        console.log(csvFiles);
+        paintMap(currentYear, currentMonth);
+    }
+
+    function calculateValues(minValue, maxValue) {
+        maxValue = Math.ceil(maxValue*2)/2;
+        var valueScale = [];
+        var difference = maxValue - minValue;
+        for (var i = 0; i < 16; i++) {
+            valueScale[i] = minValue + difference * i / 15;
+        }
+        document.getElementById("mapScaleMin-" + valueScales.length).innerText = minValue;
+        document.getElementById("mapScaleMax-" + valueScales.length).innerText = maxValue;
+        valueScales.push(valueScale);
+    }
+
+    function calculateColorScale() {
+        for (var i = 0; i < 16; i++) {
+            colorScale[i] = "rgb(" + (17 * i) + "," + 0 + "," + (255 - 17 * i) + ")"
+        }
+    }
+
+    function paintMap(year, month) {
+        for (var i = 0; i < csvFiles.length; i++) {
+            var temperatures = csvFiles[i][(year - 1881) * 12 + month];
+            var stateColoring = {};
+            var j;
+            if (temperatures[0] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[0] <= valueScales[i][j]) {
+                        stateColoring["DE-BE"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-BE"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[1] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[1] <= valueScales[i][j]) {
+                        stateColoring["DE-BB"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-BB"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[2] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[2] <= valueScales[i][j]) {
+                        stateColoring["DE-BW"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-BW"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[3] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[3] <= valueScales[i][j]) {
+                        stateColoring["DE-BY"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-BY"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[4] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[4] <= valueScales[i][j]) {
+                        stateColoring["DE-HE"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-HE"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[5] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[5] <= valueScales[i][j]) {
+                        stateColoring["DE-MV"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-MV"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[6] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[6] <= valueScales[i][j]) {
+                        stateColoring["DE-NI"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-NI"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[7] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[7] <= valueScales[i][j]) {
+                        stateColoring["DE-HH"] = colorScale[j];
+                        stateColoring["DE-HB"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-HH"] = "rgb(180, 180, 180)";
+                stateColoring["DE-HB"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[8] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[8] <= valueScales[i][j]) {
+                        stateColoring["DE-NW"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-NW"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[9] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[9] <= valueScales[i][j]) {
+                        stateColoring["DE-RP"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-RP"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[10] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[10] <= valueScales[i][j]) {
+                        stateColoring["DE-SH"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-SH"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[11] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[11] <= valueScales[i][j]) {
+                        stateColoring["DE-SL"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-SL"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[12] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[12] <= valueScales[i][j]) {
+                        stateColoring["DE-SN"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-SN"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[13] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[13] <= valueScales[i][j]) {
+                        stateColoring["DE-ST"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-ST"] = "rgb(180, 180, 180)";
+            }
+            if (temperatures[14] != null) {
+                for (j = 0; j < valueScales[i].length; j++) {
+                    if (temperatures[14] <= valueScales[i][j]) {
+                        stateColoring["DE-TH"] = colorScale[j];
+                        break;
+                    }
+                }
+            } else {
+                stateColoring["DE-TH"] = "rgb(180, 180, 180)";
+            }
+            $("#map-" + i).vectorMap("get", "mapObject").series.regions[0].setValues(stateColoring);
+        }
+    }
+
+    $("#map-0").vectorMap({
+        map: "de_merc",
+        backgroundColor: '#FFFFFF',
+        series: {
+            regions: [{
+                values: []
+            }]
+        }
+    });
+    $("#map-1").vectorMap({
+        map: "de_merc",
+        backgroundColor: '#FFFFFF',
+        series: {
+            regions: [{
+                values: []
+            }]
+        }
+    });
+    $("#map-2").vectorMap({
+        map: "de_merc",
+        backgroundColor: '#FFFFFF',
+        series: {
+            regions: [{
+                values: []
+            }]
+        }
+    });
+
+    function showMap(mapNumber) {
+        if (mapNumber === -1) {
+            if (document.getElementById("show_all_maps").checked === true) {
+                for (var i = 0; i <= 2; i++) {
+                    document.getElementById("mapBox-" + i).style.display = "inline";
+                    document.getElementById("mapCheckbox-" + i).checked = true;
+                }
+            } else {
+                for (var i = 0; i <= 2; i++) {
+                    document.getElementById("mapBox-" + i).style.display = "none";
+                    document.getElementById("mapCheckbox-" + i).checked = false;
+                }
+            }
+        } else {
+            var checkBox = document.getElementById("mapCheckbox-" + mapNumber);
+            var map = document.getElementById("mapBox-" + mapNumber);
+            if (checkBox.checked === true) {
+                map.style.display = "inline";
+            } else {
+                map.style.display = "none"
+                document.getElementById("show_all_maps").checked = false;
+            }
+        }
+    }
+
+
+    var yearsSlider = document.getElementById("yearsSlider");
+    var yearsOutput = document.getElementById("year");
+    yearsOutput.innerHTML = yearsSlider.value;
+
+    yearsSlider.oninput = function () {
+        currentYear = Number(this.value);
+        if (this.value >= 2021) {
+            yearsOutput.innerHTML = this.value + " (Vorhersage)";
+            monthsOutput.innerHTML = months[currentMonth] + " (Vorhersage)";
+        } else {
+            yearsOutput.innerHTML = this.value;
+            monthsOutput.innerHTML = months[currentMonth];
+        }
+        paintMap(currentYear, currentMonth);
+    }
+
+    var monthsSlider = document.getElementById("monthsSlider");
+    var monthsOutput = document.getElementById("month");
+    var months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+    monthsOutput.innerHTML = months[monthsSlider.value];
+
+    monthsSlider.oninput = function () {
+        currentMonth = Number(this.value);
+        if (currentYear >= 2021) {
+            monthsOutput.innerHTML = months[this.value] + " (Vorhersage)";
+        } else {
+            monthsOutput.innerHTML = months[this.value];
+        }
+        paintMap(currentYear, currentMonth);
+    }
+
+    var play = false;
+    var playButton = document.getElementById("playButton");
+    playButton.onclick = function () {
+        if (playButton.innerHTML === "►") {
+            playButton.innerHTML = "&#10073;&#10073;"
+            play = true;
+            oneStep();
+        } else {
+            play = false;
+            playButton.innerHTML = "&#9658;";
+        }
+    }
+
+    // step through the months and years;
+    function oneStep() {
+        if (play === true && (currentYear <= 2025 || currentMonth < 11)) {
+            if (currentMonth < 11) {
+                monthsSlider.value = ++currentMonth;
+                monthsSlider.dispatchEvent(new Event("input", {bubbles: true}));
+            } else {
+                currentMonth = 0;
+                monthsSlider.value = currentMonth;
+                yearsSlider.value = ++currentYear;
+                yearsSlider.dispatchEvent(new Event("input", {bubbles: true}));
+            }
+            setTimeout(oneStep, 500)
+        } else {
+            playButton.innerHTML = "&#9658;";
+            play = false;
+        }
+    }
+</script>
+</body>
+</html>
