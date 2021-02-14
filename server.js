@@ -51,6 +51,7 @@ app.listen(3000, function () {
     console.log('VintDef listening on port 3000');
 });
 
+//read every file of a folder into one string separated by '|'
 function readFiles(dirname) {
     var filenames = fs.readdirSync(dirname);
     filenames.sort();
@@ -58,8 +59,7 @@ function readFiles(dirname) {
     for (var i = 0; i < filenames.length; i++) {
         if (i === 0) {
             europeCities += fs.readFileSync(dirname + filenames[i], 'utf-8');
-        }
-        else {
+        } else {
             europeCities += "|" + fs.readFileSync(dirname + filenames[i], 'utf-8');
         }
     }
